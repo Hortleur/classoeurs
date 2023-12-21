@@ -3,3 +3,12 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+bookmarks_save:
+    path: /bookmarks/save/{postId}
+    controller: App\Controller\BookmarksController::save
+    methods: [GET, POST]
+
+app_routes:
+    resource: '../src/Controller/'
+    type: annotation

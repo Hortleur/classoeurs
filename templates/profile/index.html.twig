@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if app.user.profile is null %}
+        {{ app.user.email }}
+    {% else %}
+        {{ app.user.profile.username }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <style>
+
+    </style>
+<main class="flex flex-col no-wrap gap-4">
+    <div class="text-center">
+        {% if app.user.profile is null %}
+            <h1 class="text-5xl font-bold">Bonjour {{ app.user.email }} !</h1>
+        {% else %}
+            <h1 class="text-5xl font-bold">Bonjour {{ app.user.profile.username }} !</h1>
+        {% endif %}
+    </div>
+    <section class="flex flex-row flex-wrap justify-around gap-5">
+        <div class="card w-5/12 card-bordered border-primary border-2">
+            <figure>
+                {% if app.user.profile is null %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg" alt="photo de profil par defaut">
+                {% else %}
+                    <img src="{{ app.user.profile.profilePhoto }}" alt="image de profil" class="mask mask-circle">
+                {% endif %}
+            </figure>
+            <div class="card-body text-center">
+                {% if app.user.profile is null %}
+                    <h2 class="card-title ">{{ app.user.email }}</h2>
+                {% else %}
+                    <h2 class="text-center font-semibold text-3xl">{{ app.user.profile.username }}</h2>
+                {% endif %}
+            </div>
+        </div>
+        <div class="w-5/12 flex flex-col flex-nowrap justify-between gap-3">
+            <div class="card card-bordered border-primary border-2 p-4 h-1/2 overflow-auto">
+                <h2 class="text-center font-semibold text-3xl">Ma Bio</h2>
+                <p class="text-justify">{{ app.user.profile.bio }}</p>
+            </div>
+            <div class="card card-bordered border-primary border-2 p-4 h-1/2 gap-2 grid place-items-center">
+                <h2 class="text-center font-semibold text-3xl">Mon Niveau</h2>
+                <p class="text-center font-semibold text-2xl">{{ app.user.profile.niveau.name }}</p>
+            </div>
+        </div>
+        <div class="w-11/12 card card-bordered border-primary border-2 p-4 gap-4">
+            <h2 class="text-center font-semibold text-3xl">Mes Classeurs</h2>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="card card-bordered border-secondary border-2">
+                    <h3 class="text-center font-semibold text-xl">Classeur Perso</h3>
+                    <div>
+                        {% if app.user.posts is null %}
+
+                        {% else %}
+                            <p class="text-center">Vous n'avez encore rien créer</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card card-bordered border-secondary border-2">
+                    <h3 class="text-center font-semibold text-xl">Classeur Externe</h3>
+                    <div>
+                        {% if app.user.bookmarks is null %}
+
+                        {% else %}
+                            <p class="text-center">Vous n'avez encore rien enregistrer</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        {{ form_errors(UsernameForm) }}
+    <dialog id="updateModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg text-center">Modifier mon profil</h3>
+            <div class="flex flex-col gap-3">
+                {{ form_start(UsernameForm) }}
+                {{ form_row(UsernameForm.username) }}
+                {{ form_row(UsernameForm.bio) }}
+                {{ form_row(UsernameForm.imageFile) }}
+                {{ form_row(UsernameForm.niveau) }}
+                <button class="btn btn-success">Modifier mon profil</button>
+                {{ form_end(UsernameForm) }}
+            </div>
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+        </div>
+    </dialog>
+</main>
+
+    <button class="btn btn-circle w-20 h-20 fixed bottom-20 right-10 btn-primary" onclick="updateModal.showModal()"><iconify-icon icon="bx:edit" width="38"></iconify-icon></button>
+
+{% endblock %}

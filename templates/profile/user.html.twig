@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if user.profile is null %}
+        Utilisateur inexistant
+    {% else %}
+        {{ user.profile.username }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if user.profile is null %}
+        <main class="grid place-items-center h-[80dvh]">
+            <div>
+                <figure>
+                    <img src="{{ asset('images/search.png') }}" alt="profil inexistant">
+                </figure>
+                <p>Cet utilisateur n'a pas encore de profil ou n'existe pas !</p>
+            </div>
+            <div>
+                <a href="{{ path('app_home') }}" class="btn btn-warning">Retour</a>
+            </div>
+        </main>
+    {% else %}
+        <main class="flex flex-col flex-nowrap gap-6 my-20">
+            <div class="flex flex-row flex-nowrap w-full items-center">
+                <div class="grid place-items-center w-3/12 card card-bordered border-primary border-2">
+                    <div class="w-1/3 mx-auto">
+                        <figure>
+                            <img src="{{ user.profile.profilePhoto }}" alt="{{ user.profile.username }}" class="mask mask-circle">
+                        </figure>
+                    </div>
+                    <div>
+                        <h1 class="text-center font-semibold">{{ user.profile.username }}</h1>
+                    </div>
+                </div>
+                <div class="grid place-items-center w-9/12 h-5/6 card card-bordered border-primary border-2">
+                    <p class="text-justify w-3/4 mx-auto">{{ user.profile.bio }}</p>
+                </div>
+            </div>
+            {% if user.posts%}
+                <div class=" card card-bordered border-primary border-2 w-11/12 mx-auto">
+                    <h2 class="text-center font-semibold text-xl">Classeur</h2>
+                    <div class="grid grid-cols-3 p-4">
+                        {% for post in user.posts %}
+                            <div class="card card-bordered border-2 border-secondary p-3 flex flex-col gap-3">
+                                {% if post.image %}
+                                    <figure class="w-1/2 mx-auto">
+                                        <img src="{{ post.image }}" alt="{{ post.title }}">
+                                    </figure>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h3 class="card-title mx-auto">{{ post.title }}</h3>
+                                    {% if post.content %}
+                                        <p class="line-clamp-3 text-justify">{{ post.content }}</p>
+                                    {% endif %}
+                                    <div class="items-end">
+                                        <span class="badge badge-accent">{{ post.niveau.name }}</span>
+                                        {% if post.matiere %}
+                                            <span class="badge badge-warning">{{ post.matiere.name }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-actions flex flex-row justify-end">
+                                    <a href="/post/{{ post.id }}" class="btn btn-accent">Voir plus !</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                    <div>
+                        <p>{{ user.profile.username }} n'a rien mis dans son classeur</p>
+                    </div>
+            {% endif %}
+
+
+        </main>
+    {% endif %}
+
+{% endblock %}
