@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.alert-slide {
+    animation: alert-animation 1s linear;
+}
+
+@keyframes alert-animation {
+    0% {
+        transform: translateY(-100px);
+    }
+    50%{
+        transform: translateY(0%);
+    }
+    99%{
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

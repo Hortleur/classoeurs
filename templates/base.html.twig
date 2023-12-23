@@ -15,6 +15,9 @@
         {% endblock %}
     </head>
     <body class="relative">
+    {{ component('Alert', {
+        target: 'alert'
+    }) }}
         <div class="navbar bg-accent">
             <div class="flex-1">
                 <a class="btn btn-ghost text-xl" href="{{ path('app_home') }}">Classoeurs</a>

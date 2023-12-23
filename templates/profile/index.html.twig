@@ -40,11 +40,19 @@
         <div class="w-5/12 flex flex-col flex-nowrap justify-between gap-3">
             <div class="card card-bordered border-primary border-2 p-4 h-1/2 overflow-auto">
                 <h2 class="text-center font-semibold text-3xl">Ma Bio</h2>
-                <p class="text-justify">{{ app.user.profile.bio }}</p>
+                {% if app.user.profile is not null %}
+                    <p class="text-justify">{{ app.user.profile.bio }}</p>
+                    {% else %}
+                    <p class="text-justify">Pas encore de Bio</p>
+                {% endif %}
             </div>
             <div class="card card-bordered border-primary border-2 p-4 h-1/2 gap-2 grid place-items-center">
                 <h2 class="text-center font-semibold text-3xl">Mon Niveau</h2>
-                <p class="text-center font-semibold text-2xl">{{ app.user.profile.niveau.name }}</p>
+                {% if app.user.profile is not null %}
+                    <p class="text-center font-semibold text-2xl">{{ app.user.profile.niveau.name }}</p>
+                {% else %}
+                    <p class="text-center font-semibold">Pas encore de niveau</p>
+                {% endif %}
             </div>
         </div>
         <div class="w-11/12 card card-bordered border-primary border-2 p-4 gap-4">
@@ -53,20 +61,31 @@
                 <div class="card card-bordered border-secondary border-2">
                     <h3 class="text-center font-semibold text-xl">Classeur Perso</h3>
                     <div>
-                        {% if app.user.posts is null %}
-
-                        {% else %}
+                        {% if app.user.posts.count == 0 %}
                             <p class="text-center">Vous n'avez encore rien créer</p>
+                        {% else %}
+                            <div class="grid grid-cols-2">
+                                {% for post in app.user.posts %}
+                                    <div class="card card-bordered border-warning">
+                                        <figure>
+                                            <img src="{{ post.image }}" alt="{{ post.title }}">
+                                        </figure>
+                                        <div class="card-body">
+                                            <h2 class="mx-auto text-2xl font-semibold">{{ post.title }}</h2>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
                 </div>
                 <div class="card card-bordered border-secondary border-2">
                     <h3 class="text-center font-semibold text-xl">Classeur Externe</h3>
                     <div>
-                        {% if app.user.bookmarks is null %}
-
-                        {% else %}
+                        {% if app.user.bookmarks.count == 0 %}
                             <p class="text-center">Vous n'avez encore rien enregistrer</p>
+                        {% else %}
+                            <p>y'en a </p>
                         {% endif %}
                     </div>
                 </div>

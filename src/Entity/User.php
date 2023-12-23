@@ -40,10 +40,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Bookmark::class)]
     private Collection $bookmarks;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commentaire::class)]
+    private Collection $comment;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->bookmarks = new ArrayCollection();
+        $this->comment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,6 +196,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($bookmark->getUser() === $this) {
                 $bookmark->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comment;
+    }
+
+    public function addComment(Commentaire $comment): static
+    {
+        if (!$this->comment->contains($comment)) {
+            $this->comment->add($comment);
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Commentaire $comment): static
+    {
+        if ($this->comment->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
             }
         }
 

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body %}
+    <main class="">
+        <h1 class="text-center font-bold text-5xl my-8">{{ post.title }}</h1>
+
+        <div class="w-fit flex flex-row flex-nowrap justify-around">
+            <div class="w-7/12">
+                {% if post.image %}
+                    <img src="{{ post.image }}" alt="{{ post.title }}" class="w-1/4 mx-auto">
+                {% endif %}
+                {% if post.content %}
+                    <p class="text-justify px-6 my-5">{{ post.content }}</p>
+                {% endif %}
+                <div class="mb-5">
+                    <span class="badge badge-primary">{{ post.niveau.name }}</span>
+                    {% if post.matiere %}
+                        <span class="badge badge-warning">{{ post.matiere.name }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="w-3/12">
+                <h2 class="text-center font-semibold text-2xl">Commentaires</h2>
+                <div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut commodi ducimus fugiat harum laboriosam libero non numquam possimus repellat? A commodi ducimus laudantium minima molestias odio quis ratione voluptatem.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

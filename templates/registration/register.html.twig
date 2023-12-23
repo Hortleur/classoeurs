@@ -3,17 +3,21 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <main class=" h-[70dvh] grid place-items-center">
+        <div>
+            <h1 class="text-3xl font-bold mb-10">Créer un compte</h1>
+            {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Mot de passe',
+            }) }}
+            {{ form_row(registrationForm.agreeTerms) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <button type="submit" class="btn btn-primary w-full my-5">Register</button>
+            {{ form_end(registrationForm) }}
+            <a href="{{ path('app_login') }}" class="hover:text-accent underline text-right block">Déjà un compte ?</a>
+        </div>
+    </main>
 {% endblock %}

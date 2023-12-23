@@ -21,7 +21,9 @@ class ProfileController extends AbstractController
     {
 
         $actualUser = $this->getUser()->getUserIdentifier();
-        $oldProfilePic = $this->getUser()->getProfile()->getProfilePhoto();
+        if ($this->getUser()->getProfile()){
+            $oldProfilePic = $this->getUser()->getProfile()->getProfilePhoto();
+        }
 
         $profile = new Profile();
         $form = $this->createForm(UsernameFormType::class, $profile);

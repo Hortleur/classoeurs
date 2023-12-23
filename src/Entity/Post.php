@@ -47,9 +47,13 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Bookmark::class, orphanRemoval: true)]
     private Collection $bookmarks;
 
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Commentaire::class, orphanRemoval: true)]
+    private Collection $commentaires;
+
     public function __construct()
     {
         $this->bookmarks = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,6 +193,36 @@ class Post
             // set the owning side to null (unless already changed)
             if ($bookmark->getPost() === $this) {
                 $bookmark->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getPost() === $this) {
+                $commentaire->setPost(null);
             }
         }
 
