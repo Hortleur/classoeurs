@@ -14,7 +14,7 @@
 {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="relative">
+    <body class="relative flex flex-col min-h-screen justify-between p-0">
     {{ component('Alert', {
         target: 'alert'
     }) }}
@@ -51,7 +51,9 @@
                     </ul>
                 </div>
                 {% else %}
-                    <a href="{{ path('app_login') }}" class="btn btn-accent">Connexion</a>
+                    <a href="{{ path('app_login') }}" class="btn btn-accent"><span class="hidden lg:block">Connexion</span>
+                        <iconify-icon icon="line-md:login" class="lg:hidden" width="32"></iconify-icon>
+                    </a>
                 {% endif %}
             </div>
         </div>

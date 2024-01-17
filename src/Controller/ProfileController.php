@@ -62,7 +62,7 @@ class ProfileController extends AbstractController
 
             $userRepository->updateProfile($actualUser, $profile);
 
-            if ($newFilename !== $originalFilename){
+            if ($newFilename !== $originalFilename && $originalFilename !== null){
                 unlink($oldProfilePic);
             }
 

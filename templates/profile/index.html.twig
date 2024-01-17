@@ -20,8 +20,8 @@
             <h1 class="text-5xl font-bold">Bonjour {{ app.user.profile.username }} !</h1>
         {% endif %}
     </div>
-    <section class="flex flex-row flex-wrap justify-around gap-5">
-        <div class="card w-5/12 card-bordered border-primary border-2">
+    <section class="flex flex-col md:flex-row flex-wrap justify-around gap-5">
+        <div class="card w-11/12 mx-auto md:w-5/12 md:mx-0 card-bordered border-primary border-2">
             <figure>
                 {% if app.user.profile is null %}
                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg" alt="photo de profil par defaut">
@@ -37,7 +37,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="w-5/12 flex flex-col flex-nowrap justify-between gap-3">
+        <div class="w-11/12 mx-auto md:w-5/12 md:mx-0 flex flex-col flex-nowrap justify-between gap-3">
             <div class="card card-bordered border-primary border-2 p-4 h-1/2 overflow-auto">
                 <h2 class="text-center font-semibold text-3xl">Ma Bio</h2>
                 {% if app.user.profile is not null %}
@@ -55,23 +55,33 @@
                 {% endif %}
             </div>
         </div>
-        <div class="w-11/12 card card-bordered border-primary border-2 p-4 gap-4">
+        <div class="w-11/12 mx-auto card card-bordered border-primary border-2 p-4 gap-4">
             <h2 class="text-center font-semibold text-3xl">Mes Classeurs</h2>
-            <div class="grid grid-cols-2 gap-2">
-                <div class="card card-bordered border-secondary border-2">
-                    <h3 class="text-center font-semibold text-xl">Classeur Perso</h3>
+            <div class="flex flex-col flex-nowrap lg:grid lg:grid-cols-2 gap-2">
+                <div class="card">
+                    <div class="shadow-md shadow-base-300 w-full mt-4 mb-8 rounded-md">
+                        <h3 class="text-center font-semibold text-xl">Classeur Perso</h3>
+                    </div>
                     <div>
                         {% if app.user.posts.count == 0 %}
                             <p class="text-center">Vous n'avez encore rien créer</p>
                         {% else %}
-                            <div class="grid grid-cols-2">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {% for post in app.user.posts %}
-                                    <div class="card card-bordered border-warning">
+                                    <div class="card card-bordered border-base-100 shadow-md shadow-base-300 ">
+                                        {% if post.image %}
                                         <figure>
                                             <img src="{{ post.image }}" alt="{{ post.title }}">
                                         </figure>
+                                        {% endif %}
                                         <div class="card-body">
                                             <h2 class="mx-auto text-2xl font-semibold">{{ post.title }}</h2>
+                                        </div>
+                                        <div class="card-actions justify-end p-2" data-controller="post">
+                                            <label for="published" class="flex flex-row flex-nowrap items-center gap-2">
+                                                <span>Publié</span>
+                                                <input type="checkbox" class="toggle toggle-accent" name="published" id="" {% if post.published %}checked{% endif %} data-action="click->post#publish" data-post-id="{{ post.id }}">
+                                            </label>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -79,13 +89,31 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="card card-bordered border-secondary border-2">
-                    <h3 class="text-center font-semibold text-xl">Classeur Externe</h3>
+                <div class="divider w-full"></div>
+                <div class="card">
+                    <div class="shadow-md shadow-base-300 w-full mt-4 mb-8 rounded-md">
+                        <h3 class="text-center font-semibold text-xl w-full">Classeur Externe</h3>
+                    </div>
                     <div>
                         {% if app.user.bookmarks.count == 0 %}
                             <p class="text-center">Vous n'avez encore rien enregistrer</p>
                         {% else %}
-                            <p>y'en a </p>
+                            <div class="flex flex-col flex-nowrap gap-3">
+                                {% for booked in app.user.bookmarks %}
+                                    <div class="card card-bordered border-base-100 shadow-md shadow-base-300 ">
+                                        {% if booked.post.image %}
+                                            <figure>
+                                                <img src="{{ booked.post.image }}" alt="{{ booked.post.title }}">
+                                            </figure>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h2 class="mx-auto text-2xl font-semibold">{{ booked.post.title }}</h2>
+                                        </div>
+                                        <div class="card-actions justify-end p-2" data-controller="post">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
                 </div>

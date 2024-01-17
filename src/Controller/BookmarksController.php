@@ -38,7 +38,10 @@ class BookmarksController extends AbstractController
 
         $entityManager->flush();
 
-        return new JsonResponse(['message' => $message, 'bookmarked' => $bookmarked], Response::HTTP_OK);
+
+        $bookmarkedCount = $post->getBookmarks()->count();
+
+        return new JsonResponse(['message' => $message, 'bookmarked' => $bookmarked, 'bookmarkedCount' => $bookmarkedCount], Response::HTTP_OK);
 
     }
 }

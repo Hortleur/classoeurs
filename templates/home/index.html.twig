@@ -3,45 +3,79 @@
 {% block title %}Les Classoeurs{% endblock %}
 
 {% block body %}
-    <main class="grid grid-cols-3 gap-6 place-items-center py-10 px-4">
-        {% for post in posts %}
-            <div class=" card card-bordered border-primary shadow-lg shadow-gray-200 py-4 px-2">
-                {% if post.image %}
-                    <figure>
-                        <img src="{{ post.image }}" alt="{{ post.title }}" class="w-40">
-                    </figure>
-                {% endif %}
-                <div class="card-body">
-                    <h2 class="mx-auto font-semibold text-2xl">{{ post.title }}</h2>
-                    <p class="text-justify line-clamp-3">{{ post.content }}</p>
-                    <div>
-                        <span class="badge badge-accent">{{ post.niveau.name }}</span>
-                        {% if post.matiere %}
-                            <span class="badge badge-warning">{{ post.matiere.name }}</span>
+    <main>
+        {% if app.user %}
+            <div class="w-full flex flex-row flex-nowrap justify-center">
+                <a href="{{ path('app_post_new') }}" class="btn btn-primary w-11/12 mt-3">Nouveau Post</a>
+            </div>
+        {% endif %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 place-items-center py-10 w-full">
+            {% for post in posts %}
+                <div class=" card card-bordered border-primary w-11/12  shadow-lg shadow-gray-200 pb-4 ">
+                    {% if post.image %}
+                        <figure>
+                            <img src="{{ post.image }}" alt="{{ post.title }}" class=" ">
+                        </figure>
+                    {% endif %}
+                    <div class="card-body">
+                        {% if post.content %}
+                        <div class="collapse bg-base-200 collapse-arrow">
+                            <input type="checkbox">
+                            <div class="collapse-title text-2xl font-semibold text-center">{{ post.title }}</div>
+                            <div class="collapse-content">
+                                <p class="text-justify">{{ post.content }}</p>
+                            </div>
+                        </div>
+                            {% else %}
+                            <h2 class="card-title">{{ post.title }}</h2>
+                        {% endif %}
+                        <div>
+                            <a href="{{ path('app_post_niveau', {'niveauId': post.niveau.id}) }}">
+                                <span class="badge badge-accent">{{ post.niveau.name }}</span>
+                            </a>
+                            {% if post.matiere %}
+                                <span class="badge badge-warning">{{ post.matiere.name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="flex flex-row justify-around items-center">
+                        <a href="/post/{{ post.id }}" class="btn btn-secondary">{{ post.commentaires.count }} Commentaires</a>
+                        {% if app.user and post.user != app.user %}
+                            {% set isBookmarked = false %}
+                            {% for bookmark in app.user.bookmarks %}
+                                {% if bookmark.post.id == post.id %}
+                                    {% set isBookmarked = true %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="indicator"  data-controller="bookmarks">
+                                <span class="indicator-item indicator-bottom badge badge-accent" data-bookmarks-target="bookCount">{{ post.bookmarks.count }}</span>
+                                <div>
+                                    {% if isBookmarked %}
+                                        <button class="btn btn-ghost text-error" data-action="click->bookmarks#save" ><iconify-icon data-bookmarks-target="bookButton" icon="material-symbols-light:bookmark-remove" data-post-id=" {{ post.id }} " width="28"></iconify-icon></button>
+                                    {% else %}
+                                        <button class="btn btn-ghost text-success" data-action="click->bookmarks#save" ><iconify-icon data-bookmarks-target="bookButton" icon="material-symbols:bookmark-add" width="28" data-post-id=" {{ post.id }} "></iconify-icon></button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="indicator">
+                                <span class="indicator-item indicator-bottom badge badge-accent" data-bookmarks-target="bookCount">{{ post.bookmarks.count }}</span>
+                                <div class="text-warning"><iconify-icon icon="material-symbols-light:bookmark" width="28"></iconify-icon></div>
+                            </div>
                         {% endif %}
                     </div>
-                </div>
-                <div class="flex flex-row justify-around items-center">
-                    <a href="/post/{{ post.id }}" class="btn btn-secondary">Voir plus</a>
-                    {% if app.user and post.user != app.user %}
-                            {% if post.bookmarks.contains([app.user.id]) %}
-                                <button class="btn btn-ghost text-error" data-controller="bookmarks" data-action="click->bookmarks#save" data-post-id=" {{ post.id }} " ><iconify-icon data-bookmarks-target="bookButton" icon="material-symbols-light:bookmark-remove" width="28"></iconify-icon></button>
-                            {% else %}
-                                <button class="btn btn-ghost text-success" data-controller="bookmarks" data-action="click->bookmarks#save" data-post-id=" {{ post.id }} " ><iconify-icon data-bookmarks-target="bookButton" icon="material-symbols:bookmark-add" width="28"></iconify-icon></button>
-                            {% endif %}
-                    {% endif %}
-                </div>
-                <div class="divider w-11/12"></div>
-                <div class="flex flex-row flex-nowrap justify-between items-center mx-5">
-                    <a href="{{ path('app_user_profile', {'id': post.user.id }) }}" class="flex flex-row flex-nowrap items-center">
-                        <img src="{{ post.user.profile.profilePhoto }}" alt="{{ post.user.profile.username }}" class="w-10 mask mask-circle">
-                        <span>{{ post.user.profile.username }}</span>
-                    </a>
-                    <div>
-                        <p>{{ post.publishedAt.format('d/m/y') }}</p>
+                    <div class="divider w-11/12 mx-auto"></div>
+                    <div class="flex flex-row flex-nowrap justify-between items-center mx-5">
+                        <a href="{{ path('app_user_profile', {'id': post.user.id }) }}" class="flex flex-row flex-nowrap items-center">
+                            <img src="{{ post.user.profile.profilePhoto }}" alt="{{ post.user.profile.username }}" class="w-10 mask mask-circle">
+                            <span>{{ post.user.profile.username }}</span>
+                        </a>
+                        <div>
+                            <p>{{ post.publishedAt.format('d/m/y') }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </main>
 {% endblock %}

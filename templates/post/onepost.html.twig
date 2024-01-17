@@ -6,8 +6,8 @@
     <main class="">
         <h1 class="text-center font-bold text-5xl my-8">{{ post.title }}</h1>
 
-        <div class="w-fit flex flex-row flex-nowrap justify-around">
-            <div class="w-7/12">
+        <div class="w-fit flex flex-col justify-center lg:flex-row lg:flex-nowrap lg:justify-around mb-4">
+            <div class="lg:w-7/12">
                 {% if post.image %}
                     <img src="{{ post.image }}" alt="{{ post.title }}" class="w-1/4 mx-auto">
                 {% endif %}
@@ -21,11 +21,44 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="w-3/12">
-                <h2 class="text-center font-semibold text-2xl">Commentaires</h2>
-                <div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut commodi ducimus fugiat harum laboriosam libero non numquam possimus repellat? A commodi ducimus laudantium minima molestias odio quis ratione voluptatem.</p>
-                </div>
+            <div class="divider w-11/12 mx-auto"></div>
+            <div class="lg:w-3/12">
+                {% if post.commentaires is empty %}
+                    <h2 class="text-center font-semibold text-2xl">Il n'y a aucun commentaires</h2>
+                {% else %}
+                    <div class="collapse collapse-arrow ">
+                        <input type="checkbox">
+                        <div class=" collapse-title ">
+                            <h2>{{ post.commentaires.count }} commentaires</h2>
+                        </div>
+                        <div class="collapse-content h-full max-h-52 overflow-y-scroll">
+                            {% for comment in post.commentaires %}
+                                <div class="chat chat-start">
+                                    <div class="chat-image avatar">
+                                        <div class="w-10 rounded-full">
+                                            <img alt="{{ comment.user.profile.username }}" src="{{ comment.user.profile.profilePhoto }}" />
+                                        </div>
+                                    </div>
+                                    <div class="chat-header">
+                                        {{ comment.user.profile.username }}
+                                    </div>
+                                    <div class="chat-bubble">{{ comment.content }}</div>
+                                    {% if app.user and comment in app.user.comments %}
+                                    <div class="chat-footer" data-controller="commentaire">
+                                        <button class="text-error" data-action="click->commentaire#deleteComment" data-comment-id="{{ comment.id }}">supprimer</button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if app.user %}
+                    <div class="w-full flex flex-col flex-nowrap items-center my-10" data-controller="commentaire">
+                        <textarea name="comment" id="" cols="30" rows="10" class="border-2 border-accent rounded-none w-11/12" data-commentaire-target="commentInput"></textarea>
+                        <button class="btn btn-accent w-11/12 rounded-none" data-action="click->commentaire#comment" data-post-id="{{ post.id }}">Envoyer</button>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </main>

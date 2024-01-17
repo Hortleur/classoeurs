@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Post{% endblock %}
+
+{% block body %}
+    <div class="py-4">
+        {{ form_start(postForm) }}
+        {{ form_row(postForm.title) }}
+        {{ form_row(postForm.content) }}
+        {{ form_row(postForm.image) }}
+        {{ form_row(postForm.niveau) }}
+        {{ form_row(postForm.matiere) }}
+        {{ form_row(postForm.published) }}
+        <button type="submit" class="btn btn-success w-full">Poster</button>
+        {{ form_end(postForm) }}
+    </div>
+{% endblock %}
